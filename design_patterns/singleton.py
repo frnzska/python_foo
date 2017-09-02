@@ -23,7 +23,7 @@ class Foo:
 
 
 
-# 2. Method: Decorator returns class instance, note now brackets aftere
+# 2. Method: Decorator returns class instance
 def singleton(cls):
     return cls()
 
@@ -54,7 +54,7 @@ class Borg:
 
 class Foo(Borg): # type Borg
     def __init__(self, arg):
-        Borg.__init__(self) # initalises a Borg obj with self, so Borg and Foo reference the same self, change someting at one, than the other has it too
+        Borg.__init__(self)
         self.val = arg
 
 
@@ -62,3 +62,4 @@ a = Foo(3)
 b = Foo(8)
 print(a == b) # False, dont care
 print(b.val == a.val) # True
+# subclassing possible
