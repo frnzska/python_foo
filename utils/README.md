@@ -1,0 +1,1 @@
+Utility functions, snippets and recipes in Python 3 ... kinda random.
