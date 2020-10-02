@@ -15,23 +15,27 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # DB init
 db = SQLAlchemy(app)
 
+
+
+
+
 # Marshmallow init
 ma = Marshmallow(app)
-"""
+
 #simple example
 #runs on http://127.0.0.1:5000/
 @app.route('/', methods=['GET'])
 def get():
     return jsonify({'message': 'hallo'})
-"""
 
-class User(db.Model):
-    pass
-
-
-class Order(db.Model):
-    pass
-
+# TODO
+#class User(db.Model):
+#    pass
+#
+#
+#class Order(db.Model):
+#    pass
+#
 
 class Product(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -40,12 +44,41 @@ class Product(db.Model):
     price = db.Column(db.Float)
 
 
-class Server(db.Model):
-    pass
+    def __init__(self, description, name, price):
+        self.description = description
+        self.name = name
+        self.price = price
 
 
 
-# Todo: get, post, routes, schemas
+class ProductSchema(ma.Schema):
+
+    class Meta:
+        # fields to show on API
+        fields = ('id', 'description', 'name', 'price')
+
+
+# init schemas
+product_schema = ProductSchema()
+products_schema = ProductSchema(many=True)
+
+@app.route('/product', methods=['POST'])
+def add_product():
+    description = request.json['description']
+    name = request.json['name']
+    price = request.json['price']
+
+    new_product = Product(description=description, name=name, price=price)
+    db.session.add(new_product)
+    db.session.commit()
+    return product_schema.jsonify(new_product)
+
+
+@app.route('/product/<id>', methods=['GET'])
+def get_product(id):
+    #as http://127.0.0.1:5000/product/1
+    product = Product.query.get(id)
+    return product_schema.jsonify(product)
 
 
 
@@ -54,3 +87,8 @@ if __name__ == '__main__':
     app.run(debug=True)
 
 
+"""
+create db.sqlite file via python console executing:
+>>> from app import db
+>>> db.create_all()
+"""
