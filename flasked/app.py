@@ -15,27 +15,15 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # DB init
 db = SQLAlchemy(app)
 
-
-
-
-
 # Marshmallow init
 ma = Marshmallow(app)
 
-#simple example
-#runs on http://127.0.0.1:5000/
+# simple example
+# runs on http://127.0.0.1:5000/
 @app.route('/', methods=['GET'])
 def get():
     return jsonify({'message': 'hallo'})
 
-# TODO
-#class User(db.Model):
-#    pass
-#
-#
-#class Order(db.Model):
-#    pass
-#
 
 class Product(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -48,6 +36,14 @@ class Product(db.Model):
         self.description = description
         self.name = name
         self.price = price
+
+
+    def __str__(self):
+        return f'{self.name}: {self.description} for {self.price} Euro'
+
+
+    def __repr__(self):
+        return f"<Product('{self.name}', '{self.description}', '{self.price}')>"
 
 
 
