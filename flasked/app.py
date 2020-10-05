@@ -77,6 +77,30 @@ def get_product(id):
     return product_schema.jsonify(product)
 
 
+@app.route('/product/<id>', methods=['DELETE'])
+def delete_product(id):
+  product = Product.query.get(id)
+  db.session.delete(product)
+  db.session.commit()
+
+
+@app.route('/product/<id>', methods=['PUT'])
+def update_product(id):
+  product = Product.query.get(id)
+  product.description = request.json['description']
+  product.name = request.json['name']
+  product.price = request.json['price']
+  db.session.commit()
+
+
+@app.route('/products', methods=['GET'])
+def get_products():
+  all_products = Product.query.all()
+  result = products_schema.dump(all_products)
+  return jsonify(result.data)
+
+
+
 
 if __name__ == '__main__':
     # starts sever
